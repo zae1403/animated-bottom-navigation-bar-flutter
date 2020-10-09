@@ -207,13 +207,17 @@ class _AnimatedBottomNavigationBarState
   }
 
   List<Widget> _buildItems() {
+    final gapItemWidth = widget.notchAndCornersAnimation != null
+        ? widget.gapWidth * widget.notchAndCornersAnimation.value
+        : widget.gapWidth;
+
     List items = <Widget>[];
     for (var i = 0; i < widget.items.length; i++) {
       if (widget.gapLocation == GapLocation.center &&
           i == widget.items.length / 2) {
         items.add(
           GapItem(
-            width: widget.gapWidth * widget.notchAndCornersAnimation.value,
+            width: gapItemWidth,
           ),
         );
       }
@@ -239,7 +243,7 @@ class _AnimatedBottomNavigationBarState
           i == widget.items.length - 1) {
         items.add(
           GapItem(
-            width: widget.gapWidth * widget.notchAndCornersAnimation.value,
+            width: gapItemWidth,
           ),
         );
       }
