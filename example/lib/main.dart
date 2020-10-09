@@ -33,18 +33,26 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
   var _bottomNavIndex = 0; //default index of first screen
 
   AnimationController _animationController;
   Animation<double> animation;
   CurvedAnimation curve;
 
-  final iconList = <IconData>[
+  final iconList = [
     Icons.brightness_5,
     Icons.brightness_4,
     Icons.brightness_6,
-    Icons.brightness_7,
+    Icons.brightness_7
+  ];
+
+  final itemList = <NavItem>[
+    NavItem(icon: Icons.brightness_5, label: 'Home'),
+    NavItem(icon: Icons.brightness_4, label: 'Hime'),
+    NavItem(icon: Icons.brightness_6, label: 'Hume'),
+    NavItem(icon: Icons.brightness_7, label: 'Hame'),
   ];
 
   @override
@@ -110,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: AnimatedBottomNavigationBar(
-        icons: iconList,
+        items: itemList,
         backgroundColor: HexColor('#373A36'),
         activeIndex: _bottomNavIndex,
         activeColor: HexColor('#FFA400'),
@@ -137,7 +145,8 @@ class NavigationScreen extends StatefulWidget {
   _NavigationScreenState createState() => _NavigationScreenState();
 }
 
-class _NavigationScreenState extends State<NavigationScreen> with TickerProviderStateMixin {
+class _NavigationScreenState extends State<NavigationScreen>
+    with TickerProviderStateMixin {
   AnimationController _controller;
   Animation<double> animation;
 

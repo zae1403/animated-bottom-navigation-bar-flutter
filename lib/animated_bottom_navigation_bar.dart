@@ -1,8 +1,9 @@
 library animatedbottomnavigationbar;
 
-import 'package:animated_bottom_navigation_bar/src/navigation_bar_item.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import 'package:animated_bottom_navigation_bar/src/navigation_bar_item.dart';
 
 import 'src/circular_notch_and_corner_clipper.dart';
 import 'src/circular_notched_and_cornered_shape.dart';
@@ -10,7 +11,7 @@ import 'src/exceptions.dart';
 
 class AnimatedBottomNavigationBar extends StatefulWidget {
   /// Icon data to render in the tab bar.
-  final List<IconData> icons;
+  final List<NavItem> items;
 
   /// Handler which is passed every updated active index.
   final Function(int) onTap;
@@ -67,29 +68,32 @@ class AnimatedBottomNavigationBar extends StatefulWidget {
   /// Free space width between tab bar items. The preferred width is equal to total width of [FloatingActionButton] and double [notchMargin].
   final double gapWidth;
 
-  AnimatedBottomNavigationBar({
-    Key key,
-    @required this.icons,
-    @required this.activeIndex,
-    @required this.onTap,
-    this.height = 56,
-    this.elevation = 8,
-    this.splashRadius = 24,
-    this.splashSpeedInMilliseconds = 300,
-    this.notchMargin = 8,
-    this.backgroundColor = Colors.white,
-    this.splashColor = Colors.purple,
-    this.activeColor = Colors.deepPurpleAccent,
-    this.inactiveColor = Colors.black,
-    this.notchAndCornersAnimation,
-    this.leftCornerRadius = 0,
-    this.rightCornerRadius = 0,
-    this.iconSize = 24,
-    this.notchSmoothness = NotchSmoothness.softEdge,
-    this.gapLocation = GapLocation.none,
-    this.gapWidth = 72,
-  })  : assert(icons != null),
-        assert(icons.length >= 2 && icons.length <= 5),
+  final double labelSize;
+
+  AnimatedBottomNavigationBar(
+      {Key key,
+      @required this.items,
+      @required this.activeIndex,
+      @required this.onTap,
+      this.height = 56,
+      this.elevation = 8,
+      this.splashRadius = 24,
+      this.splashSpeedInMilliseconds = 300,
+      this.notchMargin = 8,
+      this.backgroundColor = Colors.white,
+      this.splashColor = Colors.purple,
+      this.activeColor = Colors.deepPurpleAccent,
+      this.inactiveColor = Colors.black,
+      this.notchAndCornersAnimation,
+      this.leftCornerRadius = 0,
+      this.rightCornerRadius = 0,
+      this.iconSize = 24,
+      this.notchSmoothness = NotchSmoothness.softEdge,
+      this.gapLocation = GapLocation.none,
+      this.gapWidth = 72,
+      this.labelSize = 12})
+      : assert(items != null),
+        assert(items.length >= 2 && items.length <= 5),
         assert(activeIndex != null),
         assert(onTap != null),
         super(key: key) {
@@ -100,7 +104,7 @@ class AnimatedBottomNavigationBar extends StatefulWidget {
             'consider set rightCornerRadius to 0.');
     }
     if (gapLocation == GapLocation.center) {
-      if (icons.length % 2 != 0)
+      if (items.length % 2 != 0)
         throw NonAppropriatePathException(
             'Odd count of icons along with $gapLocation causes render issue => '
             'consider set gapLocation to ${GapLocation.end}');
@@ -204,9 +208,9 @@ class _AnimatedBottomNavigationBarState
 
   List<Widget> _buildItems() {
     List items = <Widget>[];
-    for (var i = 0; i < widget.icons.length; i++) {
+    for (var i = 0; i < widget.items.length; i++) {
       if (widget.gapLocation == GapLocation.center &&
-          i == widget.icons.length / 2) {
+          i == widget.items.length / 2) {
         items.add(
           GapItem(
             width: widget.gapWidth * widget.notchAndCornersAnimation.value,
@@ -222,15 +226,17 @@ class _AnimatedBottomNavigationBarState
           bubbleColor: widget.splashColor,
           activeColor: widget.activeColor,
           inactiveColor: widget.inactiveColor,
-          iconData: widget.icons[i],
+          iconData: widget.items[i].icon,
           iconScale: _iconScale,
           iconSize: widget.iconSize,
-          onTap: () => widget.onTap(widget.icons.indexOf(widget.icons[i])),
+          label: widget.items[i].label,
+          labelSize: widget.labelSize,
+          onTap: () => widget.onTap(widget.items.indexOf(widget.items[i])),
         ),
       );
 
       if (widget.gapLocation == GapLocation.end &&
-          i == widget.icons.length - 1) {
+          i == widget.items.length - 1) {
         items.add(
           GapItem(
             width: widget.gapWidth * widget.notchAndCornersAnimation.value,
@@ -240,6 +246,15 @@ class _AnimatedBottomNavigationBarState
     }
     return items;
   }
+}
+
+class NavItem {
+  String label;
+  IconData icon;
+  NavItem({
+    this.label,
+    this.icon,
+  });
 }
 
 enum NotchSmoothness { defaultEdge, softEdge, smoothEdge, verySmoothEdge }
