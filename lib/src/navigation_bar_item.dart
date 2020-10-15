@@ -81,5 +81,6 @@ class GapItem extends StatelessWidget {
   GapItem({this.width});
 
   @override
-  Widget build(BuildContext context) => Container(width: width);
+  Widget build(BuildContext context) =>
+      Container(color: Colors.transparent, width: width);
 }
